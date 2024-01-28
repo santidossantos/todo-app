@@ -1,14 +1,17 @@
 <script setup lang="ts">
+import { onBeforeMount, ref } from 'vue'
+import { client } from '@/services/OpenAPIClient';
+import type { Task } from '@/types/openapi'
 
-const colors = ['#448AFF', '#2979FF', '#2962FF']
-const names = ['Oliver', 'Jake', 'Noah', 'James', 'Jack', 'Connor', 'Liam', 'John'];
-const items = [
-    {
-        fullName: 'John Doe',
-        initials: 'JD',
-        color: colors[Math.floor(Math.random() * colors.length)]
-    },
-]
+const tasks = ref([] as Task[])
+
+const setTasks = () => {
+    client['TaskController.find']().then((res) => {
+        tasks.value = res.data as Task[]
+    })
+}
+
+onBeforeMount(() => setTasks())
 
 </script>
 
@@ -31,9 +34,16 @@ const items = [
 
         <v-divider></v-divider>
 
-        <v-virtual-scroll :items="items" height="300" item-height="50">
+        <v-virtual-scroll :items="tasks" height="300" item-height="50">
             <template v-slot:default="{ item }">
-                <v-list-item :title="`Comprar papas`" :subtitle="`Badge #${item}`">
+                <v-list-item :title="`${item.description}`">
+                    <v-list-item-subtitle>
+                        <span class="tag-chip"
+                            v-for="(tag, index) in (item.tags || '').toString().split(',').map(t => `#${t.trim()}`)"
+                            :key="index">
+                            {{ tag }}
+                        </span>
+                    </v-list-item-subtitle>
                     <template v-slot:prepend>
                         <v-icon class="">mdi-clipboard</v-icon>
                     </template>
@@ -46,3 +56,13 @@ const items = [
         </v-virtual-scroll>
     </v-card>
 </template>
+
+<style scoped>
+.tag-chip {
+    background: linear-gradient(45deg, #0022ff, #e52e71);
+    color: white;
+    margin-right: 2%;
+    padding: 2%;
+    width: fit-content;
+}
+</style>
