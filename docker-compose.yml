@@ -1,0 +1,31 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgre
+      POSTGRES_PASSWORD: postgre
+      POSTGRES_DB: todo
+  loopback:
+    container_name: loopback
+    restart: always
+    build: ./backend
+    command: sh -c "cd /home/node/app && npm run migrate && npm run start"
+    ports:
+      - '3000:3000'
+    links:
+      - postgres
+    depends_on:
+      - postgres
+  vue:
+    container_name: vue
+    build: ./frontend
+    restart: always
+    ports:
+      - 5173:5173
+    depends_on:
+      - loopback
