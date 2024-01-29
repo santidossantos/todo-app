@@ -26,7 +26,8 @@ onBeforeMount(() => setTasks())
 
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
-                ToDo
+                <h4 v-if="!toggleCreateTask">ToDo</h4>
+                <h4 v-if="toggleCreateTask">Create</h4>
             </v-card-title>
 
             <template v-slot:append>
