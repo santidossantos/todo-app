@@ -43,7 +43,8 @@ const addTag = () => {
     form.value.category = ''
 }
 
-const emit = defineEmits(['setTasks'])
+const emit = defineEmits(['setTasks', 'closeEdit'])
+
 
 const handleSubmit = async () => {
     const result = await v$.value.$validate()
@@ -62,11 +63,12 @@ const handleSubmit = async () => {
     if (props.item?.id) {
         task.id = props.item.id
         await updateTask(task)
+        emit('closeEdit')
+
     } else {
         await createTask(task)
+        emit('setTasks')
     }
-
-    emit('setTasks')
 }
 
 const createTask = async (task: Task) => {

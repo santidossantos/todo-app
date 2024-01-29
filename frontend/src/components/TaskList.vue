@@ -25,6 +25,12 @@ const editTask = (taskToEdit: Task) => {
     task.value = taskToEdit
 }
 
+const closeEdit = () => {
+    toggleCreateTask.value = false
+    task.value = {} as Task
+    setTasks()
+}
+
 onBeforeMount(() => setTasks())
 </script>
 
@@ -40,13 +46,13 @@ onBeforeMount(() => setTasks())
             <template v-slot:append>
                 <v-btn v-if="!toggleCreateTask" color="white" icon="mdi-plus" size="small"
                     @click="handleToggleCreateTask"></v-btn>
-                <v-btn v-else color="white" icon="mdi-arrow" size="small" @click="handleToggleCreateTask"></v-btn>
+                <v-btn v-else color="white" icon="mdi-arrow-right" size="small" @click="handleToggleCreateTask"></v-btn>
             </template>
 
         </v-card-item>
 
         <v-container class="card-content">
-            <TaskCreate v-if="toggleCreateTask" @set-tasks="setTasks" :item="task" />
+            <TaskCreate v-if="toggleCreateTask" @set-tasks="setTasks" @close-edit="closeEdit" :item="task" />
 
             <v-container v-if="!toggleCreateTask">
                 <v-card class="mx-auto banner" width="400" prepend-icon="mdi-calendar">
@@ -63,7 +69,6 @@ onBeforeMount(() => setTasks())
             </v-container>
 
         </v-container>
-
     </v-card>
 </template>
 
