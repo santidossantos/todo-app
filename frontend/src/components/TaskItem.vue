@@ -8,10 +8,14 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['setEditTask'])
+const emit = defineEmits(['setEditTask', 'setDeleteTask'])
 
 const handleEdit = () => {
     emit('setEditTask', props.item)
+}
+
+const handleDelete = () => {
+    emit('setDeleteTask', props.item)
 }
 
 </script>
@@ -29,8 +33,13 @@ const handleEdit = () => {
         </template>
 
         <template v-slot:append>
-            <v-btn @click="handleEdit" icon="mdi-pencil" size="x-small" variant="tonal"></v-btn>
+            <div class="actions">
+                <v-btn @click="handleEdit" icon="mdi-pencil" size="x-small" variant="tonal"></v-btn>
+                <v-btn @click="handleDelete" color="red" icon="mdi-delete" size="x-small" variant="tonal"></v-btn>
+            </div>
         </template>
+
+
     </v-list-item>
 </template>
 
@@ -41,5 +50,11 @@ const handleEdit = () => {
     margin-right: 2%;
     padding: 2%;
     width: fit-content;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 </style>
