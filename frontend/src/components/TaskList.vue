@@ -8,9 +8,11 @@ import TaskCreate from '@/components/TaskCreate.vue'
 const tasks = ref([] as Task[])
 const toggleCreateTask = ref(false)
 const task = ref({} as Task)
+const tabs = ref(1)
+const currentBannerIcon = ref('mdi-calendar')
 
-const setTasks = () => {
-    client['TaskController.find']().then((res) => {
+const setTasks = async () => {
+    await client['TaskController.find']().then((res) => {
         tasks.value = res.data as Task[]
     })
 }
@@ -37,11 +39,23 @@ const deleteTask = (taskToDelete: Task) => {
     })
 }
 
-const tabs = ref(1)
-const currentBannerIcon = ref('mdi-calendar')
+const toggleArchive = (taskToArchive: Task) => {
+    taskToArchive.active = !taskToArchive.active
+    client['TaskController.updateById'](taskToArchive.id, taskToArchive).then(() => {
+        setTasks()
+    })
+}
 
 const setBannerIcon = (mdiIcon: string) => {
     currentBannerIcon.value = mdiIcon
+}
+
+const getTasksToDisplay = () => {
+    if (tabs.value == 1) {
+        return tasks.value.filter(t => t.active)
+    } else {
+        return tasks.value.filter(t => !t.active)
+    }
 }
 
 onBeforeMount(() => setTasks())
@@ -61,7 +75,6 @@ onBeforeMount(() => setTasks())
                     @click="handleToggleCreateTask"></v-btn>
                 <v-btn v-else color="white" icon="mdi-arrow-right" size="small" @click="handleToggleCreateTask"></v-btn>
             </template>
-
         </v-card-item>
 
         <v-tabs v-if="!toggleCreateTask" v-model="tabs" color="orange" grow>
@@ -86,9 +99,11 @@ onBeforeMount(() => setTasks())
                     </template>
                 </v-card>
 
-                <v-virtual-scroll :items="tasks" min-height="200" max-height="300" height="100%" item-height="20">
+                <v-virtual-scroll :items="getTasksToDisplay()" min-height="200" max-height="300" height="100%"
+                    item-height="20">
                     <template v-slot:default="{ item }">
-                        <TaskItem :item="item" @set-edit-task="editTask" @set-delete-task="deleteTask" />
+                        <TaskItem :item="item" @set-edit-task="editTask" @set-delete-task="deleteTask"
+                            @set-archive-task="toggleArchive" />
                     </template>
                 </v-virtual-scroll>
             </v-container>
