@@ -4,6 +4,7 @@ import { client } from '@/services/OpenAPIClient';
 import type { Task } from '@/types/openapi'
 import TaskItem from '@/components/TaskItem.vue'
 import TaskCreate from '@/components/TaskCreate.vue'
+import { onUpdated } from 'vue';
 
 const tasks = ref([] as Task[])
 
@@ -14,6 +15,8 @@ const setTasks = () => {
 }
 
 onBeforeMount(() => setTasks())
+
+onUpdated(() => setTasks())
 
 </script>
 
@@ -32,7 +35,7 @@ onBeforeMount(() => setTasks())
         </v-card-item>
 
         <v-container class="card-content">
-            <TaskCreate />
+            <TaskCreate  />
 
             <v-virtual-scroll :items="tasks" height="250" item-height="50">
                 <template v-slot:default="{ item }">

@@ -5,21 +5,21 @@ import { required, helpers } from '@vuelidate/validators'
 import { useValidationErrors } from '@/helpers/validation-errors'
 import { FORM_REQUIRED_FIELD } from '@/helpers/messages'
 import { client } from '@/services/OpenAPIClient';
+import type { TaskForm } from '@/types/task-form'
 
 
-const form = ref<any>({
+const form = ref<TaskForm>({
     description: '',
-
+    category: ''
 })
 
 const rules = {
     description: {
         required: helpers.withMessage(FORM_REQUIRED_FIELD, required)
     },
-    category: {
+    /* category: {
         required: helpers.withMessage(FORM_REQUIRED_FIELD, required)
-    }
-
+    } */
 }
 
 const v$ = useVuelidate(rules, form)
@@ -31,7 +31,17 @@ const categories = [
 ]
 
 const handleSubmit = async () => {
+    const result = await v$.value.$validate()
+    if (!result) return
+    const task = {
+        description: form.value.description,
+        active: true,
+    }
+    await createTask(task)
+}
 
+const createTask = async (task: any) => {
+    await client['TaskController.create'](null, task)
 }
 
 
@@ -51,12 +61,14 @@ const handleSubmit = async () => {
                             :error="v$.description.$error" :error-messages="errors.description" />
                     </v-col>
                 </v-row>
-                <v-row>
-                    <v-col cols="12">
-                        <v-select v-model="v$.category.$model" label="Category" bg-color="white" :items="categories"
-                            :error="v$.category.$error" :error-messages="errors.category" />
+                <!-- <v-row>
+                    <v-col class="select-row" cols="12">
+                        <v-select class="select-category" v-model="v$.category.$model" label="Category" bg-color="white"
+                            :items="categories" :error="v$.category.$error" :error-messages="errors.category" />
                     </v-col>
-                </v-row>
+                </v-row> -->
+                <v-btn type="submit" class="submit-btn" color="green" icon="mdi-pen-plus" size="small"></v-btn>
+
             </v-form>
         </v-card-text>
     </v-card>
@@ -66,5 +78,22 @@ const handleSubmit = async () => {
 .v-card {
     box-shadow: none;
     border-color: white !important;
+}
+
+.select-category {
+    width: 70%;
+}
+
+
+.select-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.submit-btn {
+    margin-bottom: 2%;
 }
 </style>
