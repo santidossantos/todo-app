@@ -10,8 +10,9 @@ const toggleCreateTask = ref(false)
 const task = ref({} as Task)
 const tabs = ref(1)
 const currentBannerIcon = ref('mdi-calendar')
+const tagFilter = ref('Study')
 
-const setTasks = async () => {
+const getTasks = async () => {
     await client['TaskController.find']().then((res) => {
         tasks.value = res.data as Task[]
     })
@@ -30,19 +31,19 @@ const editTask = (taskToEdit: Task) => {
 const closeEdit = () => {
     toggleCreateTask.value = false
     task.value = {} as Task
-    setTasks()
+    getTasks()
 }
 
 const deleteTask = (taskToDelete: Task) => {
     client['TaskController.deleteById'](taskToDelete.id).then(() => {
-        setTasks()
+        getTasks()
     })
 }
 
 const toggleArchive = (taskToArchive: Task) => {
     taskToArchive.active = !taskToArchive.active
     client['TaskController.updateById'](taskToArchive.id, taskToArchive).then(() => {
-        setTasks()
+        getTasks()
     })
 }
 
@@ -50,19 +51,30 @@ const setBannerIcon = (mdiIcon: string) => {
     currentBannerIcon.value = mdiIcon
 }
 
-const getTasksToDisplay = () => {
-    if (tabs.value == 1) {
-        return tasks.value.filter(t => t.active)
-    } else {
-        return tasks.value.filter(t => !t.active)
+const getTasksToDisplay = (tagsToMatch: string) => {
+    let tasksToDisplay = [] as Task[]
+    tasksToDisplay.push(...tasks.value)
+
+    if (tagFilter.value !== '') {
+        tasksToDisplay = tasksToDisplay.filter(t => t.tags?.some(tag => tagsToMatch?.includes(tag)));
     }
+    if (tabs.value === 1) {
+        tasksToDisplay = tasksToDisplay.filter(t => t.active);
+    } else {
+        tasksToDisplay = tasksToDisplay.filter(t => !t.active);
+    }
+
+    return tasksToDisplay
 }
 
-const filterByTags = (tags: string[]) => {
-
+const tagFilterChanged = (tag: string) => {
+    tagFilter.value = tag
 }
 
-onBeforeMount(() => setTasks())
+//watch(() => form.value.search, tagFilterChanged)
+
+
+onBeforeMount(() => getTasks())
 </script>
 
 <template>
@@ -82,7 +94,7 @@ onBeforeMount(() => setTasks())
         </v-card-item>
 
         <v-container class="card-content">
-            <TaskCreate v-if="toggleCreateTask" @set-tasks="setTasks" @close-edit="closeEdit" :item="task" />
+            <TaskCreate v-if="toggleCreateTask" @set-tasks="getTasks" @close-edit="closeEdit" :item="task" />
 
             <v-container v-if="!toggleCreateTask">
                 <v-card class="mx-auto banner" width="400" :prepend-icon="currentBannerIcon">
@@ -92,7 +104,7 @@ onBeforeMount(() => setTasks())
                     </template>
                 </v-card>
 
-                <v-virtual-scroll :items="getTasksToDisplay()" min-height="200" max-height="250" item-height="20">
+                <v-virtual-scroll :items="getTasksToDisplay(tagFilter)" min-height="200" max-height="250" item-height="20">
                     <template v-slot:default="{ item }">
                         <TaskItem :item="item" @set-edit-task="editTask" @set-delete-task="deleteTask"
                             @set-archive-task="toggleArchive" />
