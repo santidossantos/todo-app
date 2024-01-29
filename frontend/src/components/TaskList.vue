@@ -15,13 +15,10 @@ const setTasks = () => {
 }
 
 onBeforeMount(() => setTasks())
-
-onUpdated(() => setTasks())
-
 </script>
 
 <template>
-    <v-card class="mx-auto card" width="430">
+    <v-card class="mx-auto card" width="450">
 
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
@@ -35,15 +32,14 @@ onUpdated(() => setTasks())
         </v-card-item>
 
         <v-container class="card-content">
-            <TaskCreate  />
+            <TaskCreate @setTasks="setTasks" />
 
-            <v-virtual-scroll :items="tasks" height="250" item-height="50">
+            <v-virtual-scroll :items="tasks" min-height="200" max-height="300" height="100%" item-height="20">
                 <template v-slot:default="{ item }">
                     <TaskItem :item="item" />
                 </template>
             </v-virtual-scroll>
         </v-container>
-
 
     </v-card>
 </template>

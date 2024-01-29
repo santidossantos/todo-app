@@ -30,6 +30,9 @@ const categories = [
     'Food', 'Work', 'Study', 'Sport', 'Other'
 ]
 
+const emit = defineEmits(['setTasks'])
+
+
 const handleSubmit = async () => {
     const result = await v$.value.$validate()
     if (!result) return
@@ -38,6 +41,7 @@ const handleSubmit = async () => {
         active: true,
     }
     await createTask(task)
+    emit('setTasks', task)
 }
 
 const createTask = async (task: any) => {
