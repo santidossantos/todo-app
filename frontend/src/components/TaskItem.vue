@@ -8,6 +8,12 @@ const props = defineProps({
     }
 })
 
+const emit = defineEmits(['setEditTask'])
+
+const handleEdit = () => {
+    emit('setEditTask', props.item)
+}
+
 </script>
 
 <template>
@@ -23,14 +29,14 @@ const props = defineProps({
         </template>
 
         <template v-slot:append>
-            <v-btn icon="mdi-pencil" size="x-small" variant="tonal"></v-btn>
+            <v-btn @click="handleEdit" icon="mdi-pencil" size="x-small" variant="tonal"></v-btn>
         </template>
     </v-list-item>
 </template>
 
 <style scoped>
 .tag-chip {
-    background: linear-gradient(45deg, #0022ff, #e52e71);
+    background: linear-gradient(45deg, #ff4204, #ef0a5e);
     color: white;
     margin-right: 2%;
     padding: 2%;

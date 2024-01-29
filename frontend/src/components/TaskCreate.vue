@@ -8,9 +8,15 @@ import { client } from '@/services/OpenAPIClient';
 import type { TaskForm } from '@/types/task-form'
 import type { Task } from '@/types/openapi'
 
+const props = defineProps({
+    item: {
+        type: Object as () => Task,
+        required: false
+    }
+})
 
 const form = ref<TaskForm>({
-    description: '',
+    description: props.item?.description || '',
     category: ''
 })
 
@@ -29,7 +35,7 @@ const categories = [
     'Food', 'Work', 'Study', 'Sport', 'Other'
 ]
 
-const addedTags = ref<string[]>([])
+const addedTags = ref<string[]>(props.item?.tags || [])
 
 const addTag = () => {
     if (form.value.category === '' || addedTags.value.includes(form.value.category)) return
@@ -42,18 +48,33 @@ const emit = defineEmits(['setTasks'])
 const handleSubmit = async () => {
     const result = await v$.value.$validate()
     if (!result) return
-    const task: Task = {
+
+    let task: Task = {
         description: form.value.description,
         tags: addedTags.value,
         active: true,
     }
+
     form.value.description = ''
-    await createTask(task)
+    addedTags.value = []
+    v$.value.$reset()
+
+    if (props.item?.id) {
+        task.id = props.item.id
+        await updateTask(task)
+    } else {
+        await createTask(task)
+    }
+
     emit('setTasks')
 }
 
 const createTask = async (task: Task) => {
     await client['TaskController.create'](null, task)
+}
+
+const updateTask = async (task: Task) => {
+    await client['TaskController.updateById'](task.id, task)
 }
 
 
@@ -62,7 +83,8 @@ const createTask = async (task: Task) => {
 <template>
     <v-card class="mx-auto" width="400" prepend-icon="mdi-calendar">
         <template v-slot:title>
-            <h4>New Task</h4>
+            <h4 v-if="!props.item?.id">New Task</h4>
+            <h4 v-else>Edit Task</h4>
         </template>
 
         <v-card-text>

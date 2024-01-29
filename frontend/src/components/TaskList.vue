@@ -7,6 +7,7 @@ import TaskCreate from '@/components/TaskCreate.vue'
 
 const tasks = ref([] as Task[])
 const toggleCreateTask = ref(false)
+const task = ref({} as Task)
 
 const setTasks = () => {
     client['TaskController.find']().then((res) => {
@@ -16,6 +17,12 @@ const setTasks = () => {
 
 const handleToggleCreateTask = () => {
     toggleCreateTask.value = !toggleCreateTask.value
+    task.value = {} as Task
+}
+
+const editTask = (taskToEdit: Task) => {
+    toggleCreateTask.value = true
+    task.value = taskToEdit
 }
 
 onBeforeMount(() => setTasks())
@@ -31,13 +38,15 @@ onBeforeMount(() => setTasks())
             </v-card-title>
 
             <template v-slot:append>
-                <v-btn color="white" icon="mdi-plus" size="small" @click="handleToggleCreateTask"></v-btn>
+                <v-btn v-if="!toggleCreateTask" color="white" icon="mdi-plus" size="small"
+                    @click="handleToggleCreateTask"></v-btn>
+                <v-btn v-else color="white" icon="mdi-arrow" size="small" @click="handleToggleCreateTask"></v-btn>
             </template>
 
         </v-card-item>
 
         <v-container class="card-content">
-            <TaskCreate v-if="toggleCreateTask" @setTasks="setTasks" />
+            <TaskCreate v-if="toggleCreateTask" @set-tasks="setTasks" :item="task" />
 
             <v-container v-if="!toggleCreateTask">
                 <v-card class="mx-auto banner" width="400" prepend-icon="mdi-calendar">
@@ -48,7 +57,7 @@ onBeforeMount(() => setTasks())
 
                 <v-virtual-scroll :items="tasks" min-height="200" max-height="300" height="100%" item-height="20">
                     <template v-slot:default="{ item }">
-                        <TaskItem :item="item" />
+                        <TaskItem :item="item" @set-edit-task="editTask" />
                     </template>
                 </v-virtual-scroll>
             </v-container>
