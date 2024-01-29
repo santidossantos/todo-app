@@ -60,5 +60,7 @@ const handleArchive = () => {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    margin-left: 5%;
+    margin-top: 10px;
 }
 </style>

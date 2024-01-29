@@ -92,8 +92,7 @@ onBeforeMount(() => setTasks())
                     </template>
                 </v-card>
 
-                <v-virtual-scroll :items="getTasksToDisplay()" min-height="200" max-height="300" height="100%"
-                    item-height="20">
+                <v-virtual-scroll :items="getTasksToDisplay()" min-height="200" max-height="250" item-height="20">
                     <template v-slot:default="{ item }">
                         <TaskItem :item="item" @set-edit-task="editTask" @set-delete-task="deleteTask"
                             @set-archive-task="toggleArchive" />
@@ -102,7 +101,7 @@ onBeforeMount(() => setTasks())
             </v-container>
         </v-container>
 
-        <v-container>
+        <v-container class="tab-container">
             <v-tabs v-if="!toggleCreateTask" v-model="tabs" color="orange" grow>
                 <v-tab :value="1" @click="setBannerIcon('mdi-calendar')">
                     <v-icon>mdi-calendar-today</v-icon>
@@ -134,10 +133,17 @@ onBeforeMount(() => setTasks())
 }
 
 .banner {
+    border-radius: 20px;
     background-color: #f5f5f5;
     display: flex;
     justify-content: flex-start;
     margin-bottom: 5%;
     width: 100% !important;
+}
+
+.tab-container {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
 }
 </style>

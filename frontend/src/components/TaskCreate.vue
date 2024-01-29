@@ -39,6 +39,7 @@ const addedTags = ref<string[]>(props.item?.tags || [])
 
 const addTag = () => {
     if (form.value.category === '' || addedTags.value.includes(form.value.category)) return
+    if (addedTags.value.length === 3) return
     addedTags.value.push(form.value.category)
     form.value.category = ''
 }
@@ -83,7 +84,7 @@ const updateTask = async (task: Task) => {
 </script>
 
 <template>
-    <v-card class="mx-auto" width="400" prepend-icon="mdi-calendar">
+    <v-card class="mx-auto create-card" width="400" prepend-icon="mdi-calendar">
         <template v-slot:title>
             <h4 v-if="!props.item?.id">New Task</h4>
             <h4 v-else>Edit Task</h4>
@@ -111,6 +112,9 @@ const updateTask = async (task: Task) => {
                             :key="index">
                             {{ tag }}
                         </span>
+                    </v-col>
+                    <v-col v-else cols="12">
+                        <span class="hidden"></span>
                     </v-col>
                 </v-row>
 
@@ -173,6 +177,19 @@ const updateTask = async (task: Task) => {
 
 .tag-chip {
     background: linear-gradient(45deg, #eb7944, #e52e71);
+    color: white;
+    width: fit-content;
+    border-radius: 12px;
+    padding: 4px;
+    margin: 5px;
+    font-size: small;
+}
+
+.create-card {
+    margin-top: 20px !important;
+}
+
+.hidden {
     color: white;
     width: fit-content;
     border-radius: 12px;
