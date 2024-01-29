@@ -44,6 +44,10 @@ const addTag = () => {
     form.value.category = ''
 }
 
+const clearTags = () => {
+    addedTags.value = []
+}
+
 const emit = defineEmits(['setTasks', 'closeEdit'])
 
 
@@ -120,9 +124,13 @@ const updateTask = async (task: Task) => {
 
                 <v-row>
                     <v-col class="buttons" cols="12">
-                        <v-btn @click="addTag" class="tag-button" append-icon="mdi-tag">
-                            Tag
-                        </v-btn>
+                        <div class="tags-buttons"> <v-btn @click="addTag" class="tag-button" append-icon="mdi-tag">
+                                Tag
+                            </v-btn>
+                            <v-btn @click="clearTags" class="tag-button">
+                                <v-icon>mdi-spray-bottle</v-icon>
+                            </v-btn>
+                        </div>
 
                         <v-btn class="accept-button" color="blue-darken-3" type="submit"
                             append-icon="mdi-checkbox-marked-circle">
@@ -161,7 +169,12 @@ const updateTask = async (task: Task) => {
 .tag-button {
     background: linear-gradient(45deg, #329d8f, #2780d8);
     color: white;
+}
 
+.tags-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .buttons {
