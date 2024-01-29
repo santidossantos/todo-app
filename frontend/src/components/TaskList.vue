@@ -4,14 +4,18 @@ import { client } from '@/services/OpenAPIClient';
 import type { Task } from '@/types/openapi'
 import TaskItem from '@/components/TaskItem.vue'
 import TaskCreate from '@/components/TaskCreate.vue'
-import { onUpdated } from 'vue';
 
 const tasks = ref([] as Task[])
+const toggleCreateTask = ref(false)
 
 const setTasks = () => {
     client['TaskController.find']().then((res) => {
         tasks.value = res.data as Task[]
     })
+}
+
+const handleToggleCreateTask = () => {
+    toggleCreateTask.value = !toggleCreateTask.value
 }
 
 onBeforeMount(() => setTasks())
@@ -26,19 +30,28 @@ onBeforeMount(() => setTasks())
             </v-card-title>
 
             <template v-slot:append>
-                <v-btn color="white" icon="mdi-plus" size="small"></v-btn>
+                <v-btn color="white" icon="mdi-plus" size="small" @click="handleToggleCreateTask"></v-btn>
             </template>
 
         </v-card-item>
 
         <v-container class="card-content">
-            <TaskCreate @setTasks="setTasks" />
+            <TaskCreate v-if="toggleCreateTask" @setTasks="setTasks" />
 
-            <v-virtual-scroll :items="tasks" min-height="200" max-height="300" height="100%" item-height="20">
-                <template v-slot:default="{ item }">
-                    <TaskItem :item="item" />
-                </template>
-            </v-virtual-scroll>
+            <v-container v-if="!toggleCreateTask">
+                <v-card class="mx-auto banner" width="400" prepend-icon="mdi-calendar">
+                    <template v-slot:title>
+                        <h4>Active Tasks</h4>
+                    </template>
+                </v-card>
+
+                <v-virtual-scroll :items="tasks" min-height="200" max-height="300" height="100%" item-height="20">
+                    <template v-slot:default="{ item }">
+                        <TaskItem :item="item" />
+                    </template>
+                </v-virtual-scroll>
+            </v-container>
+
         </v-container>
 
     </v-card>
@@ -52,5 +65,12 @@ onBeforeMount(() => setTasks())
     place-content: center;
     height: 100%;
     width: 100%;
+}
+
+.banner {
+    background-color: #f5f5f5;
+    place-content: center;
+    margin-bottom: 4%;
+    margin-top: -10%;
 }
 </style>

@@ -17,9 +17,9 @@ const rules = {
     description: {
         required: helpers.withMessage(FORM_REQUIRED_FIELD, required)
     },
-    /* category: {
+    category: {
         required: helpers.withMessage(FORM_REQUIRED_FIELD, required)
-    } */
+    }
 }
 
 const v$ = useVuelidate(rules, form)
@@ -65,14 +65,31 @@ const createTask = async (task: any) => {
                             :error="v$.description.$error" :error-messages="errors.description" />
                     </v-col>
                 </v-row>
-                <!-- <v-row>
+                <v-row>
                     <v-col class="select-row" cols="12">
                         <v-select class="select-category" v-model="v$.category.$model" label="Category" bg-color="white"
                             :items="categories" :error="v$.category.$error" :error-messages="errors.category" />
                     </v-col>
-                </v-row> -->
-                <v-btn type="submit" class="submit-btn" color="green" icon="mdi-pen-plus" size="small"></v-btn>
+                </v-row>
 
+                <v-row class="categories">
+                    <v-col cols="12">
+                        <h4>#Tags: </h4>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col class="buttons" cols="12">
+                        <v-btn class="clean-button" append-icon="mdi-tag">
+                            Add Tag
+                        </v-btn>
+
+                        <v-btn class="accept-button" color="blue-darken-3" type="submit"
+                            append-icon="mdi-checkbox-marked-circle">
+                            OK
+                        </v-btn>
+                    </v-col>
+                </v-row>
             </v-form>
         </v-card-text>
     </v-card>
@@ -85,13 +102,12 @@ const createTask = async (task: any) => {
 }
 
 .select-category {
-    width: 70%;
+    width: 100%;
 }
-
 
 .select-row {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
@@ -99,5 +115,16 @@ const createTask = async (task: any) => {
 
 .submit-btn {
     margin-bottom: 2%;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.categories {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 </style>
