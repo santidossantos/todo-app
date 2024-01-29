@@ -59,7 +59,7 @@ const getTasksToDisplay = () => {
 }
 
 const filterByTags = (tags: string[]) => {
-    
+
 }
 
 onBeforeMount(() => setTasks())
@@ -81,17 +81,6 @@ onBeforeMount(() => setTasks())
             </template>
         </v-card-item>
 
-        <v-tabs v-if="!toggleCreateTask" v-model="tabs" color="orange" grow>
-            <v-tab :value="1" @click="setBannerIcon('mdi-calendar')">
-                <v-icon>mdi-calendar-today</v-icon>
-            </v-tab>
-
-            <v-tab :value="2" @click="setBannerIcon('mdi-archive')">
-                <v-icon>mdi-archive</v-icon>
-            </v-tab>
-
-        </v-tabs>
-
         <v-container class="card-content">
             <TaskCreate v-if="toggleCreateTask" @set-tasks="setTasks" @close-edit="closeEdit" :item="task" />
 
@@ -111,7 +100,19 @@ onBeforeMount(() => setTasks())
                     </template>
                 </v-virtual-scroll>
             </v-container>
+        </v-container>
 
+        <v-container>
+            <v-tabs v-if="!toggleCreateTask" v-model="tabs" color="orange" grow>
+                <v-tab :value="1" @click="setBannerIcon('mdi-calendar')">
+                    <v-icon>mdi-calendar-today</v-icon>
+                </v-tab>
+
+                <v-tab :value="2" @click="setBannerIcon('mdi-archive')">
+                    <v-icon>mdi-archive</v-icon>
+                </v-tab>
+
+            </v-tabs>
         </v-container>
     </v-card>
 </template> 

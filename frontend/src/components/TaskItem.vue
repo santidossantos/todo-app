@@ -39,7 +39,8 @@ const handleArchive = () => {
         <template v-slot:append>
             <div class="actions">
                 <v-btn @click="handleArchive" color="indigo" icon="mdi-archive" size="x-small" variant="tonal"></v-btn>
-                <v-btn @click="handleEdit" icon="mdi-pencil" size="x-small" variant="tonal"></v-btn>
+                <v-btn v-if="props.item.active" @click="handleEdit" icon="mdi-pencil" size="x-small"
+                    variant="tonal"></v-btn>
                 <v-btn @click="handleDelete" color="red" icon="mdi-delete" size="x-small" variant="tonal"></v-btn>
             </div>
         </template>
