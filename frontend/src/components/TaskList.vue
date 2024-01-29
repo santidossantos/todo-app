@@ -37,11 +37,18 @@ const deleteTask = (taskToDelete: Task) => {
     })
 }
 
+const tabs = ref(1)
+const currentBannerIcon = ref('mdi-calendar')
+
+const setBannerIcon = (mdiIcon: string) => {
+    currentBannerIcon.value = mdiIcon
+}
+
 onBeforeMount(() => setTasks())
 </script>
 
 <template>
-    <v-card class="mx-auto card" width="450">
+    <v-card class="mx-auto card" min-width="430" min-height="500" max-height="500">
 
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
@@ -57,13 +64,25 @@ onBeforeMount(() => setTasks())
 
         </v-card-item>
 
+        <v-tabs v-if="!toggleCreateTask" v-model="tabs" color="orange" grow>
+            <v-tab :value="1" @click="setBannerIcon('mdi-calendar')">
+                <v-icon>mdi-calendar-today</v-icon>
+            </v-tab>
+
+            <v-tab :value="2" @click="setBannerIcon('mdi-archive')">
+                <v-icon>mdi-archive</v-icon>
+            </v-tab>
+
+        </v-tabs>
+
         <v-container class="card-content">
             <TaskCreate v-if="toggleCreateTask" @set-tasks="setTasks" @close-edit="closeEdit" :item="task" />
 
             <v-container v-if="!toggleCreateTask">
-                <v-card class="mx-auto banner" width="400" prepend-icon="mdi-calendar">
+                <v-card class="mx-auto banner" width="400" :prepend-icon="currentBannerIcon">
                     <template v-slot:title>
-                        <h4>Active Tasks</h4>
+                        <h4 v-if="tabs == 1">Active Tasks</h4>
+                        <h4 v-if="tabs == 2">Archived Tasks</h4>
                     </template>
                 </v-card>
 
@@ -76,22 +95,24 @@ onBeforeMount(() => setTasks())
 
         </v-container>
     </v-card>
-</template>
+</template> 
 
 <style scoped>
+.card {
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
 .card-content {
-    padding: 3%;
     display: flex;
     flex-direction: column;
-    place-content: center;
+    align-items: flex-start;
     height: 100%;
     width: 100%;
 }
 
 .banner {
     background-color: #f5f5f5;
-    place-content: center;
-    margin-bottom: 4%;
-    margin-top: -10%;
+    margin-bottom: 5%;
 }
 </style>
