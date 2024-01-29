@@ -180,7 +180,6 @@ const updateTask = async (task: Task) => {
 .buttons {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
 }
 
 .categories {

@@ -74,7 +74,7 @@ onBeforeMount(() => getTasks())
 </script>
 
 <template>
-    <v-card class="mx-auto card" min-width="430" min-height="600" max-height="600">
+    <v-card class="mx-auto card" min-width="440" width="fit-content" max-height="600">
 
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
@@ -109,11 +109,11 @@ onBeforeMount(() => getTasks())
             </v-container>
         </v-container>
 
-        <v-container class="tab-container">
+        <v-container v-if="!toggleCreateTask" class="tab-container">
             <v-text-field v-model="searchInput" bg-color="white" solo label="Search by tag"
                 prepend-inner-icon="mdi-tag-search"></v-text-field>
 
-            <v-tabs v-if="!toggleCreateTask" v-model="tabs" color="orange" grow>
+            <v-tabs v-model="tabs" color="orange" grow>
                 <v-tab :value="1" @click="setBannerIcon('mdi-calendar')">
                     <v-icon>mdi-calendar-today</v-icon>
                 </v-tab>

@@ -27,8 +27,10 @@ const handleArchive = () => {
 <template>
     <v-list-item :title="`${props.item.description}`">
         <v-list-item-subtitle>
-            <span class="tag-chip" v-for="(tag, index) in (item.tags || '').toString().split(',').map(t => `#${t.trim()}`)"
+            <span class="tag-chip" v-for="(tag, index) in (item.tags || '').toString().split(',').map(t => `${t.trim()}`)"
                 :key="index">
+                {{ " " }}
+                <v-icon color="blue" size="x-small" v-if="tag">mdi-tag</v-icon>
                 {{ tag }}
             </span>
         </v-list-item-subtitle>
@@ -48,19 +50,11 @@ const handleArchive = () => {
 </template>
 
 <style scoped>
-.tag-chip {
-    background: linear-gradient(45deg, #ff4204, #ef0a5e);
-    color: white;
-    margin-right: 2%;
-    padding: 2%;
-    width: fit-content;
-}
-
 .actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-left: 5%;
+    margin-left: 15%;
     margin-top: 10px;
 }
 </style>
