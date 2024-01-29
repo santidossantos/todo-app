@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { client } from '@/services/OpenAPIClient';
 import type { Task } from '@/types/openapi'
 import TaskItem from '@/components/TaskItem.vue'
@@ -10,7 +10,8 @@ const toggleCreateTask = ref(false)
 const task = ref({} as Task)
 const tabs = ref(1)
 const currentBannerIcon = ref('mdi-calendar')
-const tagFilter = ref('Study')
+const tagFilter = ref('')
+const searchInput = ref('')
 
 const getTasks = async () => {
     await client['TaskController.find']().then((res) => {
@@ -52,33 +53,28 @@ const setBannerIcon = (mdiIcon: string) => {
 }
 
 const getTasksToDisplay = (tagsToMatch: string) => {
-    let tasksToDisplay = [] as Task[]
-    tasksToDisplay.push(...tasks.value)
+    const lowercaseTagsToMatch = tagsToMatch.toLowerCase();
 
-    if (tagFilter.value !== '') {
-        tasksToDisplay = tasksToDisplay.filter(t => t.tags?.some(tag => tagsToMatch?.includes(tag)));
-    }
-    if (tabs.value === 1) {
-        tasksToDisplay = tasksToDisplay.filter(t => t.active);
-    } else {
-        tasksToDisplay = tasksToDisplay.filter(t => !t.active);
-    }
+    let tasksToDisplay = tasks.value.filter(t => {
+        const matchesTags = t.tags?.some(tag => tag.toLowerCase().includes(lowercaseTagsToMatch));
+        const isActive = tabs.value === 1 ? t.active : !t.active;
+        return tagFilter.value !== '' ? matchesTags && isActive : isActive;
+    });
 
-    return tasksToDisplay
+    return tasksToDisplay;
 }
 
-const tagFilterChanged = (tag: string) => {
-    tagFilter.value = tag
+const tagFilterChanged = () => {
+    tagFilter.value = searchInput.value
 }
 
-//watch(() => form.value.search, tagFilterChanged)
-
+watch(() => searchInput.value, tagFilterChanged)
 
 onBeforeMount(() => getTasks())
 </script>
 
 <template>
-    <v-card class="mx-auto card" min-width="430" min-height="500" max-height="500">
+    <v-card class="mx-auto card" min-width="430" min-height="600" max-height="600">
 
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
@@ -114,6 +110,9 @@ onBeforeMount(() => getTasks())
         </v-container>
 
         <v-container class="tab-container">
+            <v-text-field v-model="searchInput" bg-color="white" solo label="Search by tag"
+                prepend-inner-icon="mdi-tag-search"></v-text-field>
+
             <v-tabs v-if="!toggleCreateTask" v-model="tabs" color="orange" grow>
                 <v-tab :value="1" @click="setBannerIcon('mdi-calendar')">
                     <v-icon>mdi-calendar-today</v-icon>
