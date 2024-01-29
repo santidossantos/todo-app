@@ -58,6 +58,10 @@ const getTasksToDisplay = () => {
     }
 }
 
+const filterByTags = (tags: string[]) => {
+    
+}
+
 onBeforeMount(() => setTasks())
 </script>
 
@@ -116,6 +120,8 @@ onBeforeMount(() => setTasks())
 .card {
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
 }
 
 .card-content {
@@ -128,6 +134,9 @@ onBeforeMount(() => setTasks())
 
 .banner {
     background-color: #f5f5f5;
+    display: flex;
+    justify-content: flex-start;
     margin-bottom: 5%;
+    width: 100% !important;
 }
 </style>
