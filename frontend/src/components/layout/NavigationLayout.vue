@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TaskList from '../TaskList.vue';
+import TaskList from '@/components/task/TaskList.vue';
 </script>
 
 <template>

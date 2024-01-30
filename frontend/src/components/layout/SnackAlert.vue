@@ -21,10 +21,10 @@ defineProps({
 
 <style scoped>
 .alert {
-  position: absolute;
+  position: fixed;
   z-index: 9999;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-28%);
   bottom: 0;
   margin-bottom: 20px;
   margin-top: 20px;
