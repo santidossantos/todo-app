@@ -35,7 +35,7 @@ const v$ = useVuelidate(rules, form)
 const errors = computed(() => useValidationErrors<any>(v$.value.$errors))
 
 const categories = [
-    'Food', 'Work', 'Study', 'Sport', 'Other'
+    'Food', 'Work', 'Study', 'Sports', 'Other'
 ]
 
 const addedTags = ref<string[]>(props.item?.tags || [])
