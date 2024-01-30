@@ -49,7 +49,6 @@ This App allows you to:
 * Archive/unarchive notes.
 * List all of your notes
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
