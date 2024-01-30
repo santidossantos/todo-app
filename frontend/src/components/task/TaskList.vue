@@ -2,8 +2,8 @@
 import { onBeforeMount, ref, watch } from 'vue'
 import { client } from '@/services/OpenAPIClient';
 import type { Task } from '@/types/openapi'
-import TaskItem from '@/components/TaskItem.vue'
-import TaskCreate from '@/components/TaskCreate.vue'
+import TaskItem from '@/components/task/TaskItem.vue'
+import TaskCreate from '@/components/task/TaskCreate.vue'
 
 const tasks = ref([] as Task[])
 const toggleCreateTask = ref(false)
@@ -100,7 +100,8 @@ onBeforeMount(() => getTasks())
                     </template>
                 </v-card>
 
-                <v-virtual-scroll :items="getTasksToDisplay(tagFilter)" min-height="200" max-height="250" item-height="20">
+                <v-virtual-scroll :items="getTasksToDisplay(tagFilter)" min-height="200" height="200" max-height="250"
+                    item-height="20">
                     <template v-slot:default="{ item }">
                         <TaskItem :item="item" @set-edit-task="editTask" @set-delete-task="deleteTask"
                             @set-archive-task="toggleArchive" />

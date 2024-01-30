@@ -7,6 +7,7 @@ import { FORM_REQUIRED_FIELD } from '@/helpers/messages'
 import { client } from '@/services/OpenAPIClient';
 import type { TaskForm } from '@/types/task-form'
 import type { Task } from '@/types/openapi'
+import SnackAlert from '@/components/layout/SnackAlert.vue'
 
 const props = defineProps({
     item: {
@@ -14,6 +15,8 @@ const props = defineProps({
         required: false
     }
 })
+
+const toggleAlert = ref(false)
 
 const form = ref<TaskForm>({
     description: props.item?.description || '',
@@ -72,6 +75,10 @@ const handleSubmit = async () => {
 
     } else {
         await createTask(task)
+        toggleAlert.value = true
+        setTimeout(() => {
+            toggleAlert.value = false
+        }, 3000)
         emit('setTasks')
     }
 }
@@ -141,6 +148,8 @@ const updateTask = async (task: Task) => {
             </v-form>
         </v-card-text>
     </v-card>
+
+    <SnackAlert v-if="toggleAlert" :title="'Task created successfully!'" :alertType="{ type: 'success' }" />
 </template>
 
 <style scoped>
