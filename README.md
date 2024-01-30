@@ -85,7 +85,7 @@ To run the application you only need to be running the Docker environment
 
 You can access the application using the following links:
 
-* Frontend App: https://localhost:5173
+* Frontend App: http://localhost:5173
 * Swagger UI - API Docs: http://localhost:3000/api/explorer
 
 
