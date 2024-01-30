@@ -5,7 +5,7 @@ const config = {
   name: 'postgre',
   connector: 'postgresql',
   url: '',
-  host: '127.0.0.1', // CAMBIAR a postgres
+  host: 'postgres',
   port: 5432,
   user: 'postgre',
   password: 'postgre',
@@ -13,8 +13,10 @@ const config = {
 };
 
 @lifeCycleObserver('datasource')
-export class PostgreDataSource extends juggler.DataSource
-  implements LifeCycleObserver {
+export class PostgreDataSource
+  extends juggler.DataSource
+  implements LifeCycleObserver
+{
   static dataSourceName = 'postgre';
   static readonly defaultConfig = config;
 
