@@ -95,7 +95,7 @@ const updateTask = async (task: Task) => {
 </script>
 
 <template>
-    <v-card class="mx-auto create-card" width="400" prepend-icon="mdi-calendar">
+    <v-card class="mx-auto create-card" min-width="100%" width="100%" prepend-icon="mdi-calendar">
         <template v-slot:title>
             <h4 v-if="!props.item?.id">New Task</h4>
             <h4 v-else>Edit Task</h4>

@@ -74,7 +74,7 @@ onBeforeMount(() => getTasks())
 </script>
 
 <template>
-    <v-card class="mx-auto card" min-width="440" width="fit-content" max-height="600">
+    <v-card class="mx-auto card" min-width="26%" width="fit-content" height="550" max-height="600">
 
         <v-card-item class="bg-orange-darken-4">
             <v-card-title>
